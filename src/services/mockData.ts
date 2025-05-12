@@ -1,4 +1,3 @@
-
 import { subDays, addDays, format } from 'date-fns';
 
 // Types
@@ -477,7 +476,7 @@ export const interventionSuggestions = [
   },
   {
     triggerPoints: 9,
-    suggestion: 'Consider joining a study group for courses you're struggling with. Peer learning can significantly improve understanding.',
+    suggestion: "Consider joining a study group for courses you're struggling with. Peer learning can significantly improve understanding.",
     type: 'social'
   }
 ];
