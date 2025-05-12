@@ -1,5 +1,3 @@
-import { subDays, addDays, format } from 'date-fns';
-
 // Types
 export type BlackMarkType = 
   | 'absenteeism' 
@@ -77,6 +75,44 @@ export interface InterventionSuggestion {
   suggestion: string;
   type: string;
 }
+
+// Mock FAQs data
+export const mockFAQs = [
+  {
+    question: "What are black marks?",
+    answer: "Black marks are disciplinary points given for violations of college rules. They help track and manage student behavior."
+  },
+  {
+    question: "How do I check my grades?",
+    answer: "You can view your grades in the Grades section of your dashboard. It shows both current and past semester grades."
+  },
+  {
+    question: "Where can I find my timetable?",
+    answer: "Your timetable is available in the Timetable section. It shows all your scheduled classes and their locations."
+  },
+  {
+    question: "How do I submit feedback?",
+    answer: "You can submit feedback through the Feedback section. You have options for anonymous submission and marking sensitive content."
+  },
+  {
+    question: "What happens if I get too many black marks?",
+    answer: "Accumulating 15 or more black mark points may result in academic suspension. Interventions begin at 5 points."
+  }
+];
+
+// Motivational quotes
+export const motivationalQuotes = [
+  "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+  "The future depends on what you do today.",
+  "Believe you can and you're halfway there.",
+  "It does not matter how slowly you go as long as you do not stop.",
+  "The only way to do great work is to love what you do.",
+  "Your time is limited, don't waste it living someone else's life.",
+  "The harder you work for something, the greater you'll feel when you achieve it.",
+  "Don't watch the clock; do what it does. Keep going.",
+  "Success is walking from failure to failure with no loss of enthusiasm.",
+  "The best way to predict the future is to create it."
+];
 
 // Mock data
 export const mockBlackMarks: BlackMark[] = [
@@ -664,7 +700,7 @@ export const getUserGrades = (userId: string, courseId?: string): Grade[] => {
   return grades;
 };
 
-export const calculateAverageGrade = (userId: string, courseId: string): number => {
+export const calculateAverageGrade = (userId: string, courseId?: string): number => {
   const grades = getUserGrades(userId, courseId);
   if (grades.length === 0) return 0;
   
@@ -672,4 +708,9 @@ export const calculateAverageGrade = (userId: string, courseId: string): number 
   const totalMaxScore = grades.reduce((sum, grade) => sum + grade.maxScore, 0);
   
   return (totalScore / totalMaxScore) * 100;
+};
+
+export const calculateAttendanceRate = (userId: string): number => {
+  // Mock implementation: return a random attendance rate between 70 and 100
+  return Math.floor(Math.random() * (100 - 70 + 1)) + 70;
 };
