@@ -13,76 +13,24 @@ export type BlackMarkSeverity = 'low' | 'medium' | 'high';
 export interface BlackMark {
   id: string;
   userId: string;
+  date: Date;
   type: BlackMarkType;
   description: string;
   severity: BlackMarkSeverity;
   points: number;
-  date: string;
   issuedBy?: string;
-  context?: string;
-}
-
-export interface Attendance {
-  id: string;
-  userId: string;
-  date: string;
-  status: 'present' | 'absent' | 'late';
-  courseId: string;
 }
 
 export interface Course {
   id: string;
-  name: string;
   code: string;
-  facultyId: string;
+  name: string;
+  description: string;
   credits: number;
-  description: string;
-}
-
-export interface Grade {
-  id: string;
-  userId: string;
-  courseId: string;
-  score: number;
-  maxScore: number;
-  type: 'assignment' | 'quiz' | 'midterm' | 'final' | 'project';
-  date: string;
-}
-
-export interface Feedback {
-  id: string;
-  targetId: string; // ID of user or entity receiving feedback
-  targetType: 'faculty' | 'course' | 'college';
-  content: string;
-  rating: number;
-  date: string;
-  isAnonymous: boolean;
-  isSensitive: boolean;
-  submittedBy?: string;
-}
-
-export interface Event {
-  id: string;
-  title: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  location: string;
-  type: 'academic' | 'cultural' | 'sports' | 'workshop' | 'competition';
-  organizer: string;
-}
-
-export interface Syllabus {
-  courseId: string;
-  topics: {
-    id: string;
-    title: string;
-    completed: boolean;
-    completedDate?: string;
-  }[];
 }
 
 export interface TimeSlot {
+  id: string;
   day: string;
   startTime: string;
   endTime: string;
@@ -90,370 +38,571 @@ export interface TimeSlot {
   roomNumber: string;
 }
 
+export interface Syllabus {
+  courseId: string;
+  topics: SyllabusTopic[];
+}
+
+export interface SyllabusTopic {
+  id: string;
+  title: string;
+  completed: boolean;
+  completedDate?: Date;
+}
+
+export interface Grade {
+  id: string;
+  userId: string;
+  courseId: string;
+  type: string;
+  date: Date;
+  score: number;
+  maxScore: number;
+}
+
 export interface Competition {
   id: string;
   title: string;
   description: string;
-  registrationDeadline: string;
   date: string;
-  prizes: string[];
+  registrationDeadline: string;
+  location: string;
   organizer: string;
   participants: string[];
+  prizes: string[];
 }
 
-// Generate mock data
-const today = new Date();
+export interface InterventionSuggestion {
+  triggerPoints: number;
+  suggestion: string;
+  type: string;
+}
 
-// Mock black marks
+// Mock data
 export const mockBlackMarks: BlackMark[] = [
   {
-    id: '1',
+    id: 'bm1',
     userId: 'student1',
+    date: subDays(new Date(), 3),
     type: 'absenteeism',
-    description: 'Missed three consecutive classes without notice',
+    description: 'Missed 3 classes without valid excuse',
     severity: 'medium',
     points: 2,
-    date: format(subDays(today, 7), 'yyyy-MM-dd'),
-    issuedBy: 'faculty1',
-    context: 'First occurrence this semester'
-  },
-  {
-    id: '2',
-    userId: 'student1',
-    type: 'rule_violation',
-    description: 'Late submission of assignment',
-    severity: 'low',
-    points: 1,
-    date: format(subDays(today, 14), 'yyyy-MM-dd'),
     issuedBy: 'faculty1'
   },
   {
-    id: '3',
-    userId: 'faculty1',
+    id: 'bm2',
+    userId: 'student2',
+    date: subDays(new Date(), 7),
     type: 'misconduct',
-    description: 'Reported for unprofessional behavior',
+    description: 'Disruptive behavior during lecture',
+    severity: 'low',
+    points: 1,
+    issuedBy: 'faculty2'
+  },
+  {
+    id: 'bm3',
+    userId: 'student1',
+    date: subDays(new Date(), 1),
+    type: 'academic_dishonesty',
+    description: 'Plagiarism on assignment',
+    severity: 'high',
+    points: 5,
+    issuedBy: 'faculty1'
+  },
+  {
+    id: 'bm4',
+    userId: 'student3',
+    date: subDays(new Date(), 5),
+    type: 'property_damage',
+    description: 'Damaged lab equipment',
     severity: 'medium',
     points: 3,
-    date: format(subDays(today, 20), 'yyyy-MM-dd'),
-    issuedBy: 'admin1',
-    context: 'Multiple student complaints'
+    issuedBy: 'faculty2'
+  },
+  {
+    id: 'bm5',
+    userId: 'student4',
+    date: subDays(new Date(), 2),
+    type: 'rule_violation',
+    description: 'Violation of campus code of conduct',
+    severity: 'low',
+    points: 1,
+    issuedBy: 'faculty1'
+  },
+  {
+    id: 'bm6',
+    userId: 'student5',
+    date: subDays(new Date(), 9),
+    type: 'absenteeism',
+    description: 'Excessive tardiness to class',
+    severity: 'low',
+    points: 1,
+    issuedBy: 'faculty2'
+  },
+  {
+    id: 'bm7',
+    userId: 'student6',
+    date: subDays(new Date(), 4),
+    type: 'misconduct',
+    description: 'Inappropriate language towards staff',
+    severity: 'medium',
+    points: 2,
+    issuedBy: 'faculty1'
+  },
+  {
+    id: 'bm8',
+    userId: 'student3',
+    date: subDays(new Date(), 6),
+    type: 'academic_dishonesty',
+    description: 'Cheating on exam',
+    severity: 'high',
+    points: 5,
+    issuedBy: 'faculty2'
+  },
+  {
+    id: 'bm9',
+    userId: 'student4',
+    date: subDays(new Date(), 8),
+    type: 'property_damage',
+    description: 'Vandalism of school property',
+    severity: 'high',
+    points: 4,
+    issuedBy: 'faculty1'
+  },
+  {
+    id: 'bm10',
+    userId: 'student5',
+    date: subDays(new Date(), 10),
+    type: 'rule_violation',
+    description: 'Unauthorized access to restricted area',
+    severity: 'medium',
+    points: 3,
+    issuedBy: 'faculty2'
+  },
+  {
+    id: 'bm11',
+    userId: 'student1',
+    date: subDays(new Date(), 12),
+    type: 'absenteeism',
+    description: 'Skipped mandatory workshop',
+    severity: 'low',
+    points: 1,
+    issuedBy: 'faculty1'
+  },
+  {
+    id: 'bm12',
+    userId: 'student2',
+    date: subDays(new Date(), 15),
+    type: 'misconduct',
+    description: 'Harassment of fellow student',
+    severity: 'high',
+    points: 5,
+    issuedBy: 'faculty2'
+  },
+  {
+    id: 'bm13',
+    userId: 'student6',
+    date: subDays(new Date(), 11),
+    type: 'academic_dishonesty',
+    description: 'Fabrication of data in research project',
+    severity: 'high',
+    points: 5,
+    issuedBy: 'faculty1'
+  },
+  {
+    id: 'bm14',
+    userId: 'student3',
+    date: subDays(new Date(), 13),
+    type: 'property_damage',
+    description: 'Intentional damage to library books',
+    severity: 'medium',
+    points: 3,
+    issuedBy: 'faculty2'
+  },
+  {
+    id: 'bm15',
+    userId: 'student4',
+    date: subDays(new Date(), 14),
+    type: 'rule_violation',
+    description: 'Unauthorized use of school resources',
+    severity: 'low',
+    points: 1,
+    issuedBy: 'faculty1'
   }
 ];
 
-// Mock courses
 export const mockCourses: Course[] = [
   {
     id: 'course1',
-    name: 'Introduction to Computer Science',
     code: 'CS101',
-    facultyId: 'faculty1',
-    credits: 4,
-    description: 'Fundamental concepts of computer programming and algorithmic thinking'
+    name: 'Introduction to Computer Science',
+    description: 'A foundational course in computer science, covering basic programming concepts and algorithms.',
+    credits: 3
   },
   {
     id: 'course2',
-    name: 'Data Structures',
-    code: 'CS201',
-    facultyId: 'faculty1',
-    credits: 4,
-    description: 'Implementation and analysis of fundamental data structures'
+    code: 'MATH201',
+    name: 'Calculus I',
+    description: 'An introductory course to calculus, covering limits, derivatives, and integrals.',
+    credits: 4
   },
   {
     id: 'course3',
-    name: 'Artificial Intelligence',
-    code: 'CS401',
-    facultyId: 'faculty1',
-    credits: 3,
-    description: 'Introduction to AI concepts, algorithms and applications'
+    code: 'ENG101',
+    name: 'Freshman Composition',
+    description: 'A course focused on improving writing and critical thinking skills.',
+    credits: 3
+  },
+  {
+    id: 'course4',
+    code: 'PHYS101',
+    name: 'Introduction to Physics',
+    description: 'A basic physics course covering mechanics, heat, and sound.',
+    credits: 4
+  },
+  {
+    id: 'course5',
+    code: 'HIST101',
+    name: 'World History',
+    description: 'A survey of world history from ancient times to the present.',
+    credits: 3
+  },
+  {
+    id: 'course6',
+    code: 'ART101',
+    name: 'Introduction to Art History',
+    description: 'An overview of major periods and movements in art history.',
+    credits: 3
   }
 ];
 
-// Mock attendance records
-export const mockAttendance: Attendance[] = [
+export const mockTimeSlots: TimeSlot[] = [
   {
-    id: 'att1',
-    userId: 'student1',
-    date: format(subDays(today, 1), 'yyyy-MM-dd'),
-    status: 'present',
-    courseId: 'course1'
+    id: 'ts1',
+    day: 'Monday',
+    startTime: '9:00 AM',
+    endTime: '9:50 AM',
+    courseId: 'course1',
+    roomNumber: '101'
   },
   {
-    id: 'att2',
-    userId: 'student1',
-    date: format(subDays(today, 2), 'yyyy-MM-dd'),
-    status: 'absent',
-    courseId: 'course1'
+    id: 'ts2',
+    day: 'Monday',
+    startTime: '10:00 AM',
+    endTime: '10:50 AM',
+    courseId: 'course2',
+    roomNumber: '201'
   },
   {
-    id: 'att3',
-    userId: 'student1',
-    date: format(subDays(today, 3), 'yyyy-MM-dd'),
-    status: 'present',
-    courseId: 'course2'
+    id: 'ts3',
+    day: 'Tuesday',
+    startTime: '11:00 AM',
+    endTime: '11:50 AM',
+    courseId: 'course3',
+    roomNumber: '102'
   },
   {
-    id: 'att4',
-    userId: 'student1',
-    date: format(subDays(today, 4), 'yyyy-MM-dd'),
-    status: 'late',
-    courseId: 'course3'
+    id: 'ts4',
+    day: 'Wednesday',
+    startTime: '2:00 PM',
+    endTime: '2:50 PM',
+    courseId: 'course4',
+    roomNumber: '301'
+  },
+  {
+    id: 'ts5',
+    day: 'Thursday',
+    startTime: '3:00 PM',
+    endTime: '3:50 PM',
+    courseId: 'course5',
+    roomNumber: '103'
+  },
+  {
+    id: 'ts6',
+    day: 'Friday',
+    startTime: '1:00 PM',
+    endTime: '1:50 PM',
+    courseId: 'course6',
+    roomNumber: '202'
+  },
+  {
+    id: 'ts7',
+    day: 'Tuesday',
+    startTime: '9:00 AM',
+    endTime: '9:50 AM',
+    courseId: 'course2',
+    roomNumber: '201'
+  },
+  {
+    id: 'ts8',
+    day: 'Wednesday',
+    startTime: '10:00 AM',
+    endTime: '10:50 AM',
+    courseId: 'course3',
+    roomNumber: '102'
+  },
+  {
+    id: 'ts9',
+    day: 'Thursday',
+    startTime: '11:00 AM',
+    endTime: '11:50 AM',
+    courseId: 'course4',
+    roomNumber: '301'
+  },
+  {
+    id: 'ts10',
+    day: 'Friday',
+    startTime: '2:00 PM',
+    endTime: '2:50 PM',
+    courseId: 'course5',
+    roomNumber: '103'
+  },
+  {
+    id: 'ts11',
+    day: 'Monday',
+    startTime: '3:00 PM',
+    endTime: '3:50 PM',
+    courseId: 'course6',
+    roomNumber: '202'
+  },
+  {
+    id: 'ts12',
+    day: 'Wednesday',
+    startTime: '9:00 AM',
+    endTime: '9:50 AM',
+    courseId: 'course5',
+    roomNumber: '103'
   }
 ];
 
-// Mock grades
+export const mockSyllabus = [
+  {
+    courseId: 'course1',
+    topics: [
+      { id: 'topic1', title: 'Introduction to Programming', completed: true, completedDate: subDays(new Date(), 2) },
+      { id: 'topic2', title: 'Data Types and Variables', completed: true, completedDate: subDays(new Date(), 1) },
+      { id: 'topic3', title: 'Control Structures', completed: false },
+      { id: 'topic4', title: 'Functions', completed: false }
+    ]
+  },
+  {
+    courseId: 'course2',
+    topics: [
+      { id: 'topic5', title: 'Limits', completed: true, completedDate: subDays(new Date(), 3) },
+      { id: 'topic6', title: 'Derivatives', completed: false },
+      { id: 'topic7', title: 'Integrals', completed: false }
+    ]
+  },
+  {
+    courseId: 'course3',
+    topics: [
+      { id: 'topic8', title: 'Essay Writing', completed: true, completedDate: subDays(new Date(), 4) },
+      { id: 'topic9', title: 'Research Methods', completed: false },
+      { id: 'topic10', title: 'Critical Analysis', completed: false }
+    ]
+  },
+  {
+    courseId: 'course4',
+    topics: [
+      { id: 'topic11', title: 'Mechanics', completed: true, completedDate: subDays(new Date(), 5) },
+      { id: 'topic12', title: 'Heat', completed: false },
+      { id: 'topic13', title: 'Sound', completed: false }
+    ]
+  },
+  {
+    courseId: 'course5',
+    topics: [
+      { id: 'topic14', title: 'Ancient Civilizations', completed: true, completedDate: subDays(new Date(), 6) },
+      { id: 'topic15', title: 'Medieval History', completed: false },
+      { id: 'topic16', title: 'Modern History', completed: false }
+    ]
+  },
+  {
+    courseId: 'course6',
+    topics: [
+      { id: 'topic17', title: 'Renaissance Art', completed: true, completedDate: subDays(new Date(), 7) },
+      { id: 'topic18', title: 'Baroque Art', completed: false },
+      { id: 'topic19', title: 'Modern Art', completed: false }
+    ]
+  }
+];
+
 export const mockGrades: Grade[] = [
   {
     id: 'grade1',
     userId: 'student1',
     courseId: 'course1',
+    type: 'Midterm Exam',
+    date: subDays(new Date(), 5),
     score: 85,
-    maxScore: 100,
-    type: 'assignment',
-    date: format(subDays(today, 10), 'yyyy-MM-dd')
+    maxScore: 100
   },
   {
     id: 'grade2',
     userId: 'student1',
     courseId: 'course1',
-    score: 72,
-    maxScore: 100,
-    type: 'quiz',
-    date: format(subDays(today, 15), 'yyyy-MM-dd')
+    type: 'Final Exam',
+    date: subDays(new Date(), 2),
+    score: 92,
+    maxScore: 100
   },
   {
     id: 'grade3',
     userId: 'student1',
     courseId: 'course2',
-    score: 91,
-    maxScore: 100,
-    type: 'midterm',
-    date: format(subDays(today, 20), 'yyyy-MM-dd')
+    type: 'Midterm Exam',
+    date: subDays(new Date(), 7),
+    score: 78,
+    maxScore: 100
+  },
+  {
+    id: 'grade4',
+    userId: 'student2',
+    courseId: 'course1',
+    type: 'Midterm Exam',
+    date: subDays(new Date(), 6),
+    score: 95,
+    maxScore: 100
+  },
+  {
+    id: 'grade5',
+    userId: 'student2',
+    courseId: 'course2',
+    type: 'Final Exam',
+    date: subDays(new Date(), 3),
+    score: 88,
+    maxScore: 100
+  },
+  {
+    id: 'grade6',
+    userId: 'student3',
+    courseId: 'course3',
+    type: 'Midterm Exam',
+    date: subDays(new Date(), 8),
+    score: 70,
+    maxScore: 100
+  },
+  {
+    id: 'grade7',
+    userId: 'student3',
+    courseId: 'course3',
+    type: 'Final Exam',
+    date: subDays(new Date(), 4),
+    score: 75,
+    maxScore: 100
+  },
+  {
+    id: 'grade8',
+    userId: 'student4',
+    courseId: 'course4',
+    type: 'Midterm Exam',
+    date: subDays(new Date(), 9),
+    score: 82,
+    maxScore: 100
+  },
+  {
+    id: 'grade9',
+    userId: 'student4',
+    courseId: 'course4',
+    type: 'Final Exam',
+    date: subDays(new Date(), 1),
+    score: 90,
+    maxScore: 100
+  },
+  {
+    id: 'grade10',
+    userId: 'student5',
+    courseId: 'course5',
+    type: 'Midterm Exam',
+    date: subDays(new Date(), 10),
+    score: 65,
+    maxScore: 100
+  },
+  {
+    id: 'grade11',
+    userId: 'student5',
+    courseId: 'course5',
+    type: 'Final Exam',
+    date: subDays(new Date(), 11),
+    score: 72,
+    maxScore: 100
+  },
+  {
+    id: 'grade12',
+    userId: 'student6',
+    courseId: 'course6',
+    type: 'Midterm Exam',
+    date: subDays(new Date(), 12),
+    score: 98,
+    maxScore: 100
+  },
+  {
+    id: 'grade13',
+    userId: 'student6',
+    courseId: 'course6',
+    type: 'Final Exam',
+    date: subDays(new Date(), 13),
+    score: 95,
+    maxScore: 100
   }
 ];
 
-// Mock feedback
-export const mockFeedback: Feedback[] = [
-  {
-    id: 'feedback1',
-    targetId: 'faculty1',
-    targetType: 'faculty',
-    content: 'Explains concepts clearly but goes too fast sometimes',
-    rating: 4,
-    date: format(subDays(today, 5), 'yyyy-MM-dd'),
-    isAnonymous: true,
-    isSensitive: false
-  },
-  {
-    id: 'feedback2',
-    targetId: 'course1',
-    targetType: 'course',
-    content: 'Course material is outdated and needs revision',
-    rating: 3,
-    date: format(subDays(today, 8), 'yyyy-MM-dd'),
-    isAnonymous: true,
-    isSensitive: false
-  },
-  {
-    id: 'feedback3',
-    targetId: 'faculty1',
-    targetType: 'faculty',
-    content: 'Made inappropriate comments during class',
-    rating: 2,
-    date: format(subDays(today, 12), 'yyyy-MM-dd'),
-    isAnonymous: true,
-    isSensitive: true
-  }
-];
-
-// Mock events
-export const mockEvents: Event[] = [
-  {
-    id: 'event1',
-    title: 'Annual Tech Symposium',
-    description: 'Showcasing the latest innovations from our students',
-    startDate: format(addDays(today, 5), 'yyyy-MM-dd'),
-    endDate: format(addDays(today, 7), 'yyyy-MM-dd'),
-    location: 'Main Auditorium',
-    type: 'academic',
-    organizer: 'Computer Science Department'
-  },
-  {
-    id: 'event2',
-    title: 'Campus Hackathon',
-    description: '24-hour coding challenge with exciting prizes',
-    startDate: format(addDays(today, 10), 'yyyy-MM-dd'),
-    endDate: format(addDays(today, 11), 'yyyy-MM-dd'),
-    location: 'Innovation Lab',
-    type: 'competition',
-    organizer: 'Tech Club'
-  },
-  {
-    id: 'event3',
-    title: 'Career Fair',
-    description: 'Connect with potential employers from tech industry',
-    startDate: format(addDays(today, 15), 'yyyy-MM-dd'),
-    endDate: format(addDays(today, 15), 'yyyy-MM-dd'),
-    location: 'Student Center',
-    type: 'workshop',
-    organizer: 'Career Services'
-  }
-];
-
-// Mock competitions
 export const mockCompetitions: Competition[] = [
   {
     id: 'comp1',
-    title: 'Code Wars',
-    description: 'Algorithmic problem solving under time constraints',
-    registrationDeadline: format(addDays(today, 3), 'yyyy-MM-dd'),
-    date: format(addDays(today, 10), 'yyyy-MM-dd'),
-    prizes: ['$500 Gift Card', 'Internship Opportunity', 'Tech Gadgets'],
-    organizer: 'Coding Club',
-    participants: ['student1']
+    title: 'Coding Challenge',
+    description: 'A coding competition to test your programming skills.',
+    date: addDays(new Date(), 10).toISOString(),
+    registrationDeadline: addDays(new Date(), 5).toISOString(),
+    location: 'Online',
+    organizer: 'Tech Club',
+    participants: ['student1', 'student2', 'student3'],
+    prizes: ['1st Place: $500', '2nd Place: $300', '3rd Place: $100']
   },
   {
     id: 'comp2',
-    title: 'Design Sprint',
-    description: 'UI/UX design challenge for real-world problems',
-    registrationDeadline: format(addDays(today, 5), 'yyyy-MM-dd'),
-    date: format(addDays(today, 15), 'yyyy-MM-dd'),
-    prizes: ['Design Software License', 'Industry Mentorship', 'Certificate'],
-    organizer: 'Design Department',
-    participants: []
-  }
-];
-
-// Mock syllabus
-export const mockSyllabus: Syllabus[] = [
-  {
-    courseId: 'course1',
-    topics: [
-      {
-        id: 'topic1',
-        title: 'Introduction to Programming Concepts',
-        completed: true,
-        completedDate: format(subDays(today, 30), 'yyyy-MM-dd')
-      },
-      {
-        id: 'topic2',
-        title: 'Variables and Data Types',
-        completed: true,
-        completedDate: format(subDays(today, 25), 'yyyy-MM-dd')
-      },
-      {
-        id: 'topic3',
-        title: 'Control Structures',
-        completed: true,
-        completedDate: format(subDays(today, 18), 'yyyy-MM-dd')
-      },
-      {
-        id: 'topic4',
-        title: 'Functions and Methods',
-        completed: false
-      },
-      {
-        id: 'topic5',
-        title: 'Object-Oriented Programming',
-        completed: false
-      }
-    ]
+    title: 'Debate Tournament',
+    description: 'A debate competition to improve your public speaking skills.',
+    date: addDays(new Date(), 15).toISOString(),
+    registrationDeadline: addDays(new Date(), 7).toISOString(),
+    location: 'Campus Auditorium',
+    organizer: 'Debate Society',
+    participants: ['student4', 'student5', 'student6'],
+    prizes: ['Trophy', 'Certificate', 'Scholarship']
   },
   {
-    courseId: 'course2',
-    topics: [
-      {
-        id: 'topic1',
-        title: 'Arrays and Lists',
-        completed: true,
-        completedDate: format(subDays(today, 22), 'yyyy-MM-dd')
-      },
-      {
-        id: 'topic2',
-        title: 'Stacks and Queues',
-        completed: true,
-        completedDate: format(subDays(today, 15), 'yyyy-MM-dd')
-      },
-      {
-        id: 'topic3',
-        title: 'Trees and Graphs',
-        completed: false
-      },
-      {
-        id: 'topic4',
-        title: 'Sorting and Searching Algorithms',
-        completed: false
-      }
-    ]
-  }
-];
-
-// Mock timetable
-export const mockTimeSlots: TimeSlot[] = [
-  {
-    day: 'Monday',
-    startTime: '09:00',
-    endTime: '10:30',
-    courseId: 'course1',
-    roomNumber: 'Room 101'
+    id: 'comp3',
+    title: 'Art Exhibition',
+    description: 'An art exhibition to showcase your creative talents.',
+    date: addDays(new Date(), 20).toISOString(),
+    registrationDeadline: addDays(new Date(), 10).toISOString(),
+    location: 'Art Gallery',
+    organizer: 'Art Club',
+    participants: ['student1', 'student4', 'student6'],
+    prizes: ['Exhibition Space', 'Art Supplies', 'Cash Prize']
   },
   {
-    day: 'Monday',
-    startTime: '11:00',
-    endTime: '12:30',
-    courseId: 'course2',
-    roomNumber: 'Room 203'
+    id: 'comp4',
+    title: 'Science Fair',
+    description: 'A science fair to present your innovative projects.',
+    date: subDays(new Date(), 5).toISOString(),
+    registrationDeadline: subDays(new Date(), 10).toISOString(),
+    location: 'Science Building',
+    organizer: 'Science Society',
+    participants: ['student2', 'student3', 'student5'],
+    prizes: ['Lab Equipment', 'Research Grant', 'Publication']
   },
   {
-    day: 'Tuesday',
-    startTime: '09:00',
-    endTime: '10:30',
-    courseId: 'course3',
-    roomNumber: 'Room 105'
-  },
-  {
-    day: 'Wednesday',
-    startTime: '14:00',
-    endTime: '15:30',
-    courseId: 'course1',
-    roomNumber: 'Lab 2'
-  },
-  {
-    day: 'Thursday',
-    startTime: '11:00',
-    endTime: '12:30',
-    courseId: 'course2',
-    roomNumber: 'Room 203'
-  },
-  {
-    day: 'Friday',
-    startTime: '09:00',
-    endTime: '10:30',
-    courseId: 'course3',
-    roomNumber: 'Room 105'
-  }
-];
-
-// Common FAQ for the chatbot
-export const mockFAQs = [
-  {
-    question: 'How many black marks before suspension?',
-    answer: 'Accumulating 10 black marks in a semester may lead to academic probation, while 15 black marks could result in suspension. The severity of each mark is also taken into consideration.'
-  },
-  {
-    question: 'Where can I find my syllabus?',
-    answer: 'Your course syllabi can be found in the Syllabus tab on your student dashboard. Each course has a detailed breakdown of topics and completion status.'
-  },
-  {
-    question: 'How to appeal a black mark?',
-    answer: 'To appeal a black mark, go to the Black Marks section, select the mark in question, and click on the "Appeal" button. Provide a clear explanation for your appeal.'
-  },
-  {
-    question: 'When are final exams scheduled?',
-    answer: 'Final exam schedules are posted in the Timetable section, typically 4 weeks before the exam period begins.'
-  },
-  {
-    question: 'How do I submit anonymous feedback?',
-    answer: 'Navigate to the Feedback section, choose the target (faculty, course, or college), write your feedback, and check the "Anonymous" option before submitting.'
+    id: 'comp5',
+    title: 'Music Concert',
+    description: 'A music concert to showcase your musical talents.',
+    date: subDays(new Date(), 10).toISOString(),
+    registrationDeadline: subDays(new Date(), 15).toISOString(),
+    location: 'Music Hall',
+    organizer: 'Music Club',
+    participants: ['student1', 'student2', 'student4'],
+    prizes: ['Recording Session', 'Musical Instruments', 'Concert Tickets']
   }
 ];
 
@@ -481,107 +630,46 @@ export const interventionSuggestions = [
   }
 ];
 
-// Chatbot motivational quotes
-export const motivationalQuotes = [
-  "The best way to predict your future is to create it.",
-  "Success is not final, failure is not fatal: It is the courage to continue that counts.",
-  "Your time is limited, don't waste it living someone else's life.",
-  "The future belongs to those who believe in the beauty of their dreams.",
-  "The only way to do great work is to love what you do.",
-  "Believe you can and you're halfway there.",
-  "Don't watch the clock; do what it does. Keep going.",
-  "The secret of getting ahead is getting started.",
-  "It's not about having time, it's about making time.",
-  "You are never too old to set another goal or to dream a new dream."
-];
-
-// Helper function to get user's total black marks
-export const getUserBlackMarks = (userId: string) => {
+// Helper functions
+export const getUserBlackMarks = (userId: string): BlackMark[] => {
   return mockBlackMarks.filter(mark => mark.userId === userId);
 };
 
-// Helper function to get user's total black mark points
-export const getUserBlackMarkPoints = (userId: string) => {
-  const userMarks = getUserBlackMarks(userId);
-  return userMarks.reduce((total, mark) => total + mark.points, 0);
+export const getUserBlackMarkPoints = (userId: string): number => {
+  return getUserBlackMarks(userId).reduce((sum, mark) => sum + mark.points, 0);
 };
 
-// Helper function to get appropriate intervention based on points
-export const getInterventionSuggestion = (points: number) => {
-  // Sort interventions by trigger points in descending order
-  const sortedInterventions = [...interventionSuggestions].sort(
-    (a, b) => b.triggerPoints - a.triggerPoints
-  );
-  
-  // Find the first intervention that applies
-  for (const intervention of sortedInterventions) {
-    if (points >= intervention.triggerPoints) {
-      return intervention;
-    }
-  }
-  
-  return null;
+export const getInterventionSuggestion = (points: number): InterventionSuggestion | undefined => {
+  return interventionSuggestions.find(suggestion => points >= suggestion.triggerPoints);
 };
 
-// Helper function to get user's courses
-export const getUserCourses = (userId: string) => {
-  // For faculty, return courses they teach
-  if (userId.startsWith('faculty')) {
-    return mockCourses.filter(course => course.facultyId === userId);
-  }
-  
-  // For students, return all courses (in a real app, would filter by enrollment)
+export const getUserCourses = (userId: string): Course[] => {
+  // Mock implementation: every user is enrolled in all courses
   return mockCourses;
 };
 
-// Helper function to get user's attendance
-export const getUserAttendance = (userId: string, courseId?: string) => {
-  if (courseId) {
-    return mockAttendance.filter(
-      att => att.userId === userId && att.courseId === courseId
-    );
-  }
-  return mockAttendance.filter(att => att.userId === userId);
-};
-
-// Helper function to get user's grades
-export const getUserGrades = (userId: string, courseId?: string) => {
-  if (courseId) {
-    return mockGrades.filter(
-      grade => grade.userId === userId && grade.courseId === courseId
-    );
-  }
-  return mockGrades.filter(grade => grade.userId === userId);
-};
-
-// Helper function to calculate attendance rate
-export const calculateAttendanceRate = (userId: string, courseId?: string) => {
-  const attendance = getUserAttendance(userId, courseId);
-  if (attendance.length === 0) return 0;
+export const getSyllabusCompletionRate = (courseId: string): number => {
+  const syllabus = mockSyllabus.find(syl => syl.courseId === courseId);
+  if (!syllabus) return 0;
   
-  const present = attendance.filter(att => att.status === 'present').length;
-  const total = attendance.length;
-  
-  return (present / total) * 100;
+  const completedTopics = syllabus.topics.filter(topic => topic.completed).length;
+  return (completedTopics / syllabus.topics.length) * 100;
 };
 
-// Helper function to calculate average grade
-export const calculateAverageGrade = (userId: string, courseId?: string) => {
+export const getUserGrades = (userId: string, courseId?: string): Grade[] => {
+  let grades = mockGrades.filter(grade => grade.userId === userId);
+  if (courseId) {
+    grades = grades.filter(grade => grade.courseId === courseId);
+  }
+  return grades;
+};
+
+export const calculateAverageGrade = (userId: string, courseId: string): number => {
   const grades = getUserGrades(userId, courseId);
   if (grades.length === 0) return 0;
   
-  const total = grades.reduce((sum, grade) => sum + (grade.score / grade.maxScore) * 100, 0);
+  const totalScore = grades.reduce((sum, grade) => sum + grade.score, 0);
+  const totalMaxScore = grades.reduce((sum, grade) => sum + grade.maxScore, 0);
   
-  return total / grades.length;
-};
-
-// Helper function to get course syllabus completion percentage
-export const getSyllabusCompletionRate = (courseId: string) => {
-  const courseSyllabus = mockSyllabus.find(syl => syl.courseId === courseId);
-  if (!courseSyllabus) return 0;
-  
-  const completed = courseSyllabus.topics.filter(topic => topic.completed).length;
-  const total = courseSyllabus.topics.length;
-  
-  return (completed / total) * 100;
+  return (totalScore / totalMaxScore) * 100;
 };

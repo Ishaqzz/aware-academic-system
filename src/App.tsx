@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 // Pages
 import SignIn from "./pages/SignIn";
@@ -17,6 +18,10 @@ import AdminBlackMarks from "./pages/admin/AdminBlackMarks";
 import FeedbackPage from "./pages/shared/FeedbackPage";
 import ChatPage from "./pages/shared/ChatPage";
 import NotFound from "./pages/NotFound";
+import TimetablePage from "./pages/shared/TimetablePage";
+import SyllabusPage from "./pages/shared/SyllabusPage";
+import CompetitionsPage from "./pages/shared/CompetitionsPage";
+import GradesPage from "./pages/student/GradesPage";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +78,38 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } 
       />
+      <Route 
+        path="/student-dashboard/timetable" 
+        element={
+          <ProtectedRoute allowedRoles={['student']}>
+            <TimetablePage />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/student-dashboard/syllabus" 
+        element={
+          <ProtectedRoute allowedRoles={['student']}>
+            <SyllabusPage />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/student-dashboard/competitions" 
+        element={
+          <ProtectedRoute allowedRoles={['student']}>
+            <CompetitionsPage />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/student-dashboard/grades" 
+        element={
+          <ProtectedRoute allowedRoles={['student']}>
+            <GradesPage />
+          </ProtectedRoute>
+        } 
+      />
       
       {/* Faculty routes */}
       <Route 
@@ -107,6 +144,30 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } 
       />
+      <Route 
+        path="/faculty-dashboard/timetable" 
+        element={
+          <ProtectedRoute allowedRoles={['faculty']}>
+            <TimetablePage />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/faculty-dashboard/syllabus" 
+        element={
+          <ProtectedRoute allowedRoles={['faculty']}>
+            <SyllabusPage />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/faculty-dashboard/competitions" 
+        element={
+          <ProtectedRoute allowedRoles={['faculty']}>
+            <CompetitionsPage />
+          </ProtectedRoute>
+        } 
+      />
       
       {/* Admin routes */}
       <Route 
@@ -133,6 +194,30 @@ const AppRoutes = () => {
           </ProtectedRoute>
         } 
       />
+      <Route 
+        path="/admin-dashboard/timetable" 
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <TimetablePage />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin-dashboard/syllabus" 
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <SyllabusPage />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/admin-dashboard/competitions" 
+        element={
+          <ProtectedRoute allowedRoles={['admin']}>
+            <CompetitionsPage />
+          </ProtectedRoute>
+        } 
+      />
       
       {/* Redirect from / to appropriate pages */}
       <Route path="/" element={<Navigate to="/signin" replace />} />
@@ -146,13 +231,15 @@ const AppRoutes = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
-      </BrowserRouter>
+      <ThemeProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AuthProvider>
+            <AppRoutes />
+          </AuthProvider>
+        </BrowserRouter>
+      </ThemeProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

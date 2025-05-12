@@ -95,3 +95,54 @@
 .animate-pulse-soft {
   animation: pulse-soft 2s infinite;
 }
+
+/* Toast notification styles */
+.toast-notification {
+  @apply rounded-lg shadow-md overflow-hidden border;
+}
+
+.toast-notification-title {
+  @apply font-medium text-sm;
+}
+
+.toast-notification-description {
+  @apply text-sm text-muted-foreground;
+}
+
+/* Card hover effects */
+.hover-card {
+  @apply transition-all duration-300;
+}
+
+.hover-card:hover {
+  @apply shadow-lg -translate-y-1;
+}
+
+/* Fix for dark mode tables */
+.dark .border {
+  @apply border-border;
+}
+
+.dark .bg-muted\/30,
+.dark .bg-muted\/50,
+.dark .bg-muted\/20 {
+  @apply bg-muted/30;
+}
+
+/* Custom scrollbar for dark mode */
+.dark ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.dark ::-webkit-scrollbar-track {
+  @apply bg-muted/20;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  @apply bg-muted rounded-full;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted/80;
+}
